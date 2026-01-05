@@ -1,0 +1,11 @@
+{
+  "CR11": {
+    "architecture": "checkpoint",
+    "base_size_px": 512,
+    "type": "SD15",
+    "checkpoint": {
+      "name": "CyberRealistic_V1.1.safetensors",
+      "url": "https://huggingface.co/cyberdelia/CyberRealistic/resolve/main/CyberRealistic_V1.1.safetensors"
+    }
+  }
+}

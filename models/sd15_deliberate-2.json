@@ -1,0 +1,11 @@
+{
+  "DB2": {
+    "architecture": "checkpoint",
+    "base_size_px": 512,
+    "type": "SD15",
+    "checkpoint": {
+      "name": "Deliberate_v2.safetensors",
+      "url": "https://huggingface.co/XpucT/Deliberate/resolve/main/Deliberate_v2.safetensors"
+    }
+  }
+}

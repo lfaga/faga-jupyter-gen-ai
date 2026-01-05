@@ -1,0 +1,34 @@
+{
+  "loras": [
+    {
+      "name": "lora_1.safetensors",
+      "url": "/content/drive/MyDrive/AI/LoRAs/SD1.5/lora_1.safetensors",
+      "strength": 1.0,
+      "type": "SD15"
+    },
+    {
+      "name": "lora_2.safetensors",
+      "url": "/content/drive/MyDrive/AI/LoRAs/SD1.5/lora_2.safetensors",
+      "strength": 0.85,
+      "type": "SD15"
+    },
+    {
+      "name": "lora_3.safetensors",
+      "url": "/content/drive/MyDrive/AI/LoRAs/SD1.5/lora_3.safetensors",
+      "strength": 0.85,
+      "type": "SD15"
+    }
+  ],
+  "embeddings": [
+    {
+      "name": "embed1.safetensors",
+      "url": "/content/drive/MyDrive/AI/Embeddings/SD1.5/embed1.safetensors",
+      "type": "SD15"
+    },
+    {
+      "name": "neg_embed1.safetensors",
+      "url": "/content/drive/MyDrive/AI/Embeddings/SD1.5/neg_embed1.safetensors",
+      "type": "SD15"
+    }
+  ]
+}

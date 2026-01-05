@@ -1,0 +1,27 @@
+{
+  "Chroma50Flash": {
+    "architecture": "modular",
+    "base_size_px": 1024,
+    "type": "FLUX1S",
+    "unet": {
+      "name": "chroma-unlocked-v50-flash-heun-Q5_K_M.gguf",
+      "url": "https://huggingface.co/duyntnet/Chroma-GGUF-All-Versions/resolve/main/chroma-unlocked-v50-flash-heun/chroma-unlocked-v50-flash-heun-Q5_K_M.gguf",
+      "is_gguf": 1
+    },
+    "vae": {
+      "name": "ae.safetensors",
+      "url": "https://huggingface.co/lodestones/Chroma/resolve/main/ae.safetensors"
+    },
+    "text_encoder": {
+      "name": "t5xxl-encoder-fp32-q6_k.gguf",
+      "url": "https://huggingface.co/chatpig/t5-v1_1-xxl-encoder-fp32-gguf/resolve/main/t5xxl-encoder-fp32-q6_k.gguf",
+      "type": "CHROMA",
+      "is_gguf": 1
+    },
+    "clip_l": {
+      "name": "chroma50flash_clip_l.safetensors",
+      "url": "https://huggingface.co/zhangxiaosong18/FLUX.1-dev-VAE/resolve/main/text_encoder/model.safetensors",
+      "type": "STABLE_DIFFUSION"
+    }
+  }
+}

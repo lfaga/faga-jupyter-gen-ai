@@ -1,0 +1,22 @@
+{
+  "LUM2": {
+    "architecture": "modular",
+    "base_size_px": 1024,
+    "type": "LUMINA2",
+    "unet": {
+      "name": "lumina2-q8_0.gguf",
+      "url": "https://huggingface.co/calcuis/lumina-gguf/resolve/main/lumina2-q8_0.gguf",
+      "is_gguf": 1
+    },
+    "vae": {
+      "name": "lumina2_vae.safetensors",
+      "url": "https://huggingface.co/Alpha-VLLM/Lumina-Image-2.0/resolve/main/vae/diffusion_pytorch_model.safetensors"
+    },
+    "text_encoder": {
+      "name": "gemma_2_2b_fp16.safetensors",
+      "url": "https://huggingface.co/calcuis/lumina-gguf/resolve/main/gemma_2_2b_fp16.safetensors",
+      "type": "LUMINA2",
+      "is_gguf": 0
+    }
+  }
+}

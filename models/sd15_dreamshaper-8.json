@@ -1,0 +1,11 @@
+{
+  "DS8": {
+    "architecture": "checkpoint",
+    "base_size_px": 512,
+    "type": "SD15",
+    "checkpoint": {
+      "name": "DreamShaper_8_pruned.safetensors",
+      "url": "https://huggingface.co/Lykon/DreamShaper/resolve/main/DreamShaper_8_pruned.safetensors"
+    }
+  }
+}

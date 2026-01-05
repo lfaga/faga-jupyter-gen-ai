@@ -1,0 +1,11 @@
+{
+  "ICB24": {
+    "architecture": "checkpoint",
+    "base_size_px": 512,
+    "type": "SD15",
+    "checkpoint": {
+      "name": "icbinpICantBelieveIts_mid2024.safetensors",
+      "url": "https://civitai.com/api/download/models/667760?type=Model&format=SafeTensor&size=pruned&fp=fp16"
+    }
+  }
+}

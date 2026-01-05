@@ -1,0 +1,22 @@
+{
+  "prompt": "prompt",
+  "negative": "neg_prompt",
+  "width": 512,
+  "height": 512,
+  "steps": 30,
+  "cfg": 6.0,
+  "sampler": "dpmpp_sde_gpu",
+  "scheduler": "karras",
+  "hires_fix": false,
+  "upscale_model": "some_upscaler.safetensors",
+  "batch_size": 1,
+  "seed": 0,
+  "clip_skip": 1,
+  "model": "CR11",
+  "loras": [
+    {
+      "name": "lora_1.safetensors",
+      "strength": 1.0
+    }
+  ]
+}

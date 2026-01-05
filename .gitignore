@@ -1,0 +1,7 @@
+faga/ai/__pycache__/*
+faga/ai/model_types/__pycache__/*
+.vscode/*
+faga/ai/workflows/__pycache__/*
+faga/ui/__pycache__/*
+models/sd15_lazy-mix-real-amateur-4_0.json
+models/sd15_uber-realistic-porn-merge-2_3.json

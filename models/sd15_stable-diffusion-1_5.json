@@ -1,0 +1,11 @@
+{
+  "BASE": {
+    "architecture": "checkpoint",
+    "base_size_px": 512,
+    "type": "SD15",
+    "checkpoint": {
+      "name": "v1-5-pruned-emaonly.safetensors",
+      "url": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors"
+    }
+  }
+}

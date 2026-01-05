@@ -1,0 +1,16 @@
+{
+  "RV60B1": {
+    "architecture": "checkpoint",
+    "base_size_px": 512,
+    "use_custom_vae": 1,
+    "type": "SD15",
+    "checkpoint": {
+      "name": "Realistic_Vision_V6.0_NV_B1_fp16.safetensors",
+      "url": "https://huggingface.co/SG161222/Realistic_Vision_V6.0_B1_noVAE/resolve/main/Realistic_Vision_V6.0_NV_B1_fp16.safetensors"
+    },
+    "vae": {
+      "name": "vae-ft-mse-840000-ema-pruned.safetensors",
+      "url": "https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.safetensors"
+    }
+  }
+}

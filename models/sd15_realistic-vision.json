@@ -1,0 +1,22 @@
+{
+  "RV10": {
+    "architecture": "modular",
+    "base_size_px": 512,
+    "type": "SD15",
+    "unet": {
+      "name": "realistic-vision_unet.bin",
+      "url": "https://huggingface.co/stablediffusionapi/realistic-vision/resolve/main/unet/diffusion_pytorch_model.bin",
+      "is_gguf": 0
+    },
+    "vae": {
+      "name": "realistic-vision_vae.bin",
+      "url": "https://huggingface.co/stablediffusionapi/realistic-vision/resolve/main/vae/diffusion_pytorch_model.bin"
+    },
+    "text_encoder": {
+      "name": "realistic-vision_clip.bin",
+      "url": "https://huggingface.co/stablediffusionapi/realistic-vision/resolve/main/text_encoder/pytorch_model.bin",
+      "type": "STABLE_DIFFUSION",
+      "is_gguf": 0
+    }
+  }
+}

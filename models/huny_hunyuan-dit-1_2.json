@@ -1,0 +1,12 @@
+{
+  "HD12": {
+    "architecture": "checkpoint",
+    "base_size_px": 1024,
+    "type": "HUNYUAN_DIT",
+    "checkpoint": {
+      "custom_url": 0,
+      "name": "hunyuan_dit_1.2.safetensors",
+      "url": "https://huggingface.co/comfyanonymous/hunyuan_dit_comfyui/resolve/main/hunyuan_dit_1.2.safetensors"
+    }
+  }
+}

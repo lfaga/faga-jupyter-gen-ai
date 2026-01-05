@@ -1,0 +1,11 @@
+{
+  "AR181": {
+    "architecture": "checkpoint",
+    "base_size_px": 512,
+    "type": "SD15",
+    "checkpoint": {
+      "name": "AbsoluteReality_1.8.1_pruned.safetensors",
+      "url": "https://huggingface.co/Lykon/AbsoluteReality/resolve/main/AbsoluteReality_1.8.1_pruned.safetensors"
+    }
+  }
+}
