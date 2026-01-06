@@ -3,7 +3,7 @@
 
 **FAGA** is a high-performance, object-oriented Python framework designed to orchestrate Generative AI workflows within Google Colab. Unlike standard node-based interactions, FAGA treats ComfyUI as a backend engine, providing a structured, typed, and scalable environment for image generation.
 
-![Project Preview](path/to/your/cat_image.png) *(Note: Add your cat generation screenshot here!)*
+![Project Preview](images/screenshot.png)
 
 ## 🚀 The Vision
 Coming from a background in C# and Enterprise Architecture, I developed FAGA to solve the "spaghetti code" problem prevalent in many AI notebooks. The goal was to build a system that follows strict **SOLID principles**, provides a **reactive UI**, and manages complex hardware logistics (VRAM/Disk) automatically.
