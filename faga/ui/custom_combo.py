@@ -10,6 +10,7 @@ class CustomCombo(widgets.VBox):
     options: list[Any] = [],
     placeholder: str = "",
     on_change: None | Callable[[dict[str, Any]], None] = None,
+    hidden_values: list[str] = [],
     **kwargs
   ):
     super().__init__(**kwargs)
@@ -31,6 +32,7 @@ class CustomCombo(widgets.VBox):
     self._txtctl.observe(self._on_txtctl_change, type="change", names="value")
     self._selctl.observe(self._on_selctl_change, type="change", names="value")
     self._on_change_callback: None | Callable[[dict[str, Any]], None] = on_change
+    self._hidden_values = hidden_values
 
     self._is_refreshing: bool = False
 
@@ -74,12 +76,17 @@ class CustomCombo(widgets.VBox):
         self._is_refreshing = False
 
   def _refresh_controls(self):
-    if self._txtctl.value != self.value:
+    if self._txtctl.value != self.value and not self.value in self._hidden_values:
       self._txtctl.value = self.value
     self._selctl.value = None
     self._selctl.options = self._options or []
-    if self.value in self._selctl.options:
-      self._selctl.value = self.value or None
+    if len(self._selctl.options) > 0:
+      if isinstance(self._selctl.options[0], tuple):
+        copts: list[str] = [t[1] for t in self._selctl.options if t[1] == self.value]
+        if self.value in copts:
+          self._selctl.value = self.value or None
+      elif self.value in self._selctl.options:
+        self._selctl.value = self.value or None
 
   def _on_txtctl_change(self, change: dict[str, Any]):
     self._txtctl.unobserve(self._on_txtctl_change, type="change", names="value")

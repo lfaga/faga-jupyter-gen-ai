@@ -111,9 +111,7 @@ class PromptForm:
       p_name: str = self._header_controls["preset"].value
       if p_name and not re.search(r"[^\w\-\.]", p_name):
         self._fm.save_preset(p_name, mp)
-        self._header_controls["preset"].options = [
-          n for n in self._fm.get_presets(self.model_id if self._fm.is_valid_model_id(self.model_id) else None)
-        ]
+        self._header_controls["preset"].options = self._get_select_preset_options()
       else:
         # not sure if i gonna keep the alert, gotta see how it behaves in collab,
         # if i like it i might implement it instead of the other prints
@@ -148,6 +146,7 @@ class PromptForm:
       ensure_option=False,
       disabled=False,
       continuous_update=False,
+      hidden_values=["_hidden_"],
       layout=widgets.Layout(flex="1 0 auto", width="auto")
     )
     self._header_controls["preset"].on_change(self._on_preset_change)
@@ -312,6 +311,13 @@ class PromptForm:
     )
     self._body_controls = body_controls
 
+  def _get_select_preset_options(self) -> list[tuple[str, str]]:
+    values: list[tuple[str, str]] = [
+      (n, n) for n in self._fm.get_presets(self.model_id if self._fm.is_valid_model_id(self.model_id) else None)
+    ]
+    values.insert(0, ("_hidden_", "_hidden_"))
+    return values
+
   def _refresh_form(self):
     for ctl_name, control in self._header_controls.items():
       match ctl_name:
@@ -325,12 +331,10 @@ class PromptForm:
           control.value = self.model_id if self._fm.is_valid_model_id(self.model_id) else " "
 
         case "preset":
-          control.options = [
-            n for n in self._fm.get_presets(self.model_id if self._fm.is_valid_model_id(self.model_id) else None)
-          ]
+          control.options = self._get_select_preset_options()
           control.value = self.preset_name if self._fm.is_valid_preset_for_model(
             self.model_id, self.preset_name
-          ) else None
+          ) else "_hidden_"
 
         case "execute" | "save_preset":
           control.layout = widgets.Layout(
@@ -445,6 +449,10 @@ textarea,
 button:hover {
   border: 1px solid var(--accent-color) !important;
   color: var(--accent-color) !important;
+}
+
+option[value='_hidden_'] {
+  display: none !important;
 }
 </style>"""
     )
