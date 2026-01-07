@@ -1,0 +1,18 @@
+{
+  "embeddings": [],
+  "loras": [],
+  "negative": "low quality, blur",
+  "model": "CR11",
+  "width": 768,
+  "height": 1024,
+  "steps": 50,
+  "sampler": "euler",
+  "scheduler": "simple",
+  "batch_size": 1,
+  "seed": 0,
+  "prompt": "a chimpanzee astronaut outside a gemini capsule doing a spacewalk",
+  "cfg": 4.5,
+  "clip_skip": 1,
+  "hires_fix": true,
+  "upscale_model": ""
+}

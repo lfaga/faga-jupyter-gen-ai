@@ -1,5 +1,5 @@
 from typing import Any, Self
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from faga.ai.models import ModelType
 from faga.ai.model_params import (
   ModelParams,
@@ -12,7 +12,8 @@ from faga.ai.model_params import (
 @dataclass
 class T2I_Flux1s_Params(ModelParams, MP_TagPrompt, MP_LoRAs):
 
-  def get_type(self) -> ModelType:
+  @property
+  def model_type(self) -> ModelType:
     return ModelType.FLUX1S
 
   @classmethod

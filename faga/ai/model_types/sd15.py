@@ -14,7 +14,8 @@ from faga.ai.model_params import (
 @dataclass
 class T2I_SD15_Params(ModelParams, MP_NegativePrompt, MP_LoRAs, MP_Embeddings):
 
-  def get_type(self) -> ModelType:
+  @property
+  def model_type(self) -> ModelType:
     return ModelType.SD15
 
   @classmethod

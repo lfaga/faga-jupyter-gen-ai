@@ -1,6 +1,8 @@
 import sys, math
 import torch
-from typing import Any
+import ipywidgets as widgets
+from typing import Any, ContextManager
+from contextlib import nullcontext
 from faga.ai.file_manager import FileManager
 from faga.ai.model_types.sd15 import T2I_SD15_Params
 from faga.ai.models import Architecture, ClipType, WeightType
@@ -35,7 +37,9 @@ from custom_nodes.ComfyUI_GGUF.nodes import (
 class SD15_Workflow:
 
   @staticmethod
-  def generate(fileManager: FileManager, params: T2I_SD15_Params) -> torch.Tensor:
+  def generate(
+    fileManager: FileManager, params: T2I_SD15_Params, msg_out: widgets.Output | ContextManager[Any] = nullcontext()
+  ) -> torch.Tensor:
 
     model_config = fileManager.get_model(params.model)
 
@@ -132,8 +136,9 @@ class SD15_Workflow:
 
       empty_latent_img, = EmptyLatentImage().generate(first_width, first_height, params.batch_size)
 
-      #print(f"First KSampler pass with empty latent at W:{first_width}xH:{first_height}")
-      #print(f"with steps:{first_steps}")
+      with msg_out:
+        print(f"First KSampler pass with empty latent at W:{first_width}xH:{first_height}")
+        print(f"with steps:{first_steps}")
 
       sampled_latent, = KSampler().sample(
         model,
@@ -153,8 +158,9 @@ class SD15_Workflow:
           sampled_latent, "nearest-exact", final_width, final_height, "disabled"
         )
 
-        #print(f"Second KSampler pass with upscaled latent at W:{final_width}xH:{final_height}")
-        #print(f"with steps:{final_steps}")
+        with msg_out:
+          print(f"Second KSampler pass with upscaled latent at W:{final_width}xH:{final_height}")
+          print(f"with steps:{final_steps}")
 
         final_latent, = KSampler().sample(
           model,
@@ -182,7 +188,8 @@ class SD15_Workflow:
       del vae, sampled_latent, final_latent
 
       if params.upscale_model:
-        #print(f"Upscaling with model: {upscale_model_name}")
+        with msg_out:
+          print(f"Upscaling with model: {params.upscale_model}")
         upscale_model, = UpscaleModelLoader().execute(params.upscale_model)
         upscaled_images, = ImageUpscaleWithModel().execute(upscale_model, images)
         del images, upscale_model

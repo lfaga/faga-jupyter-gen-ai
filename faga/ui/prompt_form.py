@@ -1,12 +1,13 @@
 import re
 import ipywidgets as widgets
 from IPython.core.display import HTML
-from IPython.display import display
-from typing import Any, Callable, Self
+from typing import Any, Callable, ContextManager
 from dataclasses import asdict
+from contextlib import nullcontext
 from faga.ai.file_manager import FileManager
 from faga.ai.model_params import ModelParams
 from faga.ai.factory import ModelParamsFactory
+from faga.ai.models import Model, ModelType
 from faga.ui.loras_selector import LoraSelector
 from faga.ui.embed_selector import EmbeddingSelector
 from faga.ui.custom_combo import CustomCombo
@@ -14,14 +15,20 @@ from faga.ui.custom_combo import CustomCombo
 
 class PromptForm:
 
-  def __init__(self, file_manager: FileManager, callback_generate: Callable[[str, ModelParams], None]):
+  def __init__(
+    self,
+    file_manager: FileManager,
+    callback_generate: None | Callable[[str, ModelParams], None],
+    message_output: widgets.Output | ContextManager[Any] = nullcontext()
+  ):
     self._fm: FileManager = file_manager
-    self._callback_generate: Callable[[str, ModelParams], None] = callback_generate
+    self._callback_generate: None | Callable[[str, ModelParams], None] = callback_generate
     self._model_id: str = ""
     self._preset_name: str = ""
     self._model_params: ModelParams | None = None
     self._header_controls: dict[str, Any] = {}
     self._body_controls: list = []
+    self._msg_out: widgets.Output | ContextManager[Any] = message_output
     self._header_container: widgets.VBox = widgets.VBox()
     self._body_container: widgets.VBox = widgets.VBox()
     self._header_container.add_class("box_container")
@@ -41,9 +48,10 @@ class PromptForm:
       was_refeshing: bool = self._is_refreshing
       self._is_refreshing = True
 
+      prev_model = self._fm.get_model(self.model_id)
       self._model_id = new_value
-      model = self._fm.get_model(self._model_id)
-      if model:
+      model = self._fm.get_model(self.model_id)
+      if model and (not prev_model or prev_model.type != model.type):
         self._model_params = ModelParamsFactory.create_new(model.type, self._model_id)
       if not was_refeshing:
         self._refresh_form()
@@ -62,7 +70,9 @@ class PromptForm:
       self._preset_name = new_value
       preset = self._fm.get_preset(self._preset_name)
       if preset and self._fm.is_valid_model_id(preset.model):
-        self.model_id = preset.model
+        sm: Model | None = self._fm.get_model(self.model_id)
+        if not sm or sm.type != preset.model_type:
+          self.model_id = preset.model
         self._model_params = preset
       if not was_refeshing:
         self._refresh_form()
@@ -104,6 +114,12 @@ class PromptForm:
       else:
         raise ValueError("Execute: Cannot harvest data")
 
+  def _btn_defaults_on_click(self, b: widgets.Button):
+    if self._fm.is_valid_model_id(self.model_id):
+      if (model := self._fm.get_model(self.model_id)):
+        self._model_params = ModelParamsFactory.create_new(model.type, self.model_id)
+        self._refresh_form()
+
   def _btn_save_preset_on_click(self, b: widgets.Button):
 
     mp = self._harvest_data()
@@ -113,16 +129,11 @@ class PromptForm:
         self._fm.save_preset(p_name, mp)
         self._header_controls["preset"].options = self._get_select_preset_options()
       else:
-        # not sure if i gonna keep the alert, gotta see how it behaves in collab,
-        # if i like it i might implement it instead of the other prints
-        display(
-          HTML(
-            "<script>window.alert('Save preset: Invalid preset name. (Allowed characters: a-z A-Z 0-9 - _ .)');</script>"
-          )
-        )
-        print("Save preset: Invalid preset name. (Allowed characters: a-z A-Z 0-9 - _ .)")
+        with self._msg_out:
+          print("Save preset: Invalid preset name. (Allowed characters: a-z A-Z 0-9 - _ .)")
     else:
-      print("Save preset: Cannot harvest data")
+      with self._msg_out:
+        print("Save preset: Cannot harvest data")
 
   def _append_control(self, controls: list, param_name: str, widget: Any, full_row: bool = False):
     widget.data_param_name = param_name
@@ -155,12 +166,16 @@ class PromptForm:
     self._header_controls["save_preset"].add_class("control")
     self._header_controls["save_preset"].on_click(self._btn_save_preset_on_click)
 
+    self._header_controls["defaults"] = widgets.Button(description='Defaults', disabled=False)
+    self._header_controls["defaults"].add_class("control")
+    self._header_controls["defaults"].on_click(self._btn_defaults_on_click)
+
     self._header_controls["execute"] = widgets.Button(description='Generate', disabled=False)
     self._header_controls["execute"].add_class("control")
     self._header_controls["execute"].on_click(self._btn_execute_on_click)
 
     buttons_box: widgets.HBox = widgets.HBox(
-      [self._header_controls["save_preset"], self._header_controls["execute"]],
+      [self._header_controls["save_preset"], self._header_controls["defaults"], self._header_controls["execute"]],
       layout=widgets.Layout(flex="0 0 auto", align_self="flex-end")
     )
     header_box: widgets.VBox = widgets.VBox(
@@ -312,9 +327,8 @@ class PromptForm:
     self._body_controls = body_controls
 
   def _get_select_preset_options(self) -> list[tuple[str, str]]:
-    values: list[tuple[str, str]] = [
-      (n, n) for n in self._fm.get_presets(self.model_id if self._fm.is_valid_model_id(self.model_id) else None)
-    ]
+    m: Model | None = self._fm.get_model(self.model_id)
+    values: list[tuple[str, str]] = [(n, n) for n in self._fm.get_presets(model_type=m.type if m else None)]
     values.insert(0, ("_hidden_", "_hidden_"))
     return values
 
@@ -332,8 +346,9 @@ class PromptForm:
 
         case "preset":
           control.options = self._get_select_preset_options()
-          control.value = self.preset_name if self._fm.is_valid_preset_for_model(
-            self.model_id, self.preset_name
+          mt: ModelType | None = m.type if (m := self._fm.get_model(self.model_id)) else None
+          control.value = self.preset_name if mt and self._fm.is_valid_preset_for_type(
+            mt, self.preset_name
           ) else "_hidden_"
 
         case "execute" | "save_preset":
@@ -456,7 +471,3 @@ option[value='_hidden_'] {
 }
 </style>"""
     )
-
-  @classmethod
-  def create_new(cls, fileManager: FileManager, callback_generate: Callable[[str, ModelParams], None]) -> Self:
-    return cls(fileManager, callback_generate)

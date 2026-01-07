@@ -1,5 +1,8 @@
 import torch, platform
-from faga.ai.models import Model, ModelType
+import ipywidgets as widgets
+from typing import ContextManager, Any
+from contextlib import nullcontext
+from faga.ai.models import ModelType
 from faga.ai.model_params import ModelParams
 from faga.ai.extras import LoRA, Embedding
 from faga.ai.file_manager import FileManager
@@ -9,17 +12,25 @@ from faga.ai.download_manager import DownloadManager
 class Workflow:
 
   @staticmethod
-  def generate(file_manager: FileManager, model_id: str, params: ModelParams, dest_path: str) -> torch.Tensor | None:
+  def generate(
+    file_manager: FileManager,
+    model_id: str,
+    params: ModelParams,
+    dest_path: str,
+    msg_out: widgets.Output | ContextManager[Any] = nullcontext()
+  ) -> torch.Tensor | None:
+
     if platform.system() == "Windows":
-      print("Not supported on Windows")
+      with msg_out:
+        print("Not supported on Windows")
       raise Exception("Do not run locally!")
 
     if not (model := file_manager.get_model(model_id)):
       raise Exception(f"Model {model_id} not found.")
 
-    dm = DownloadManager(dest_path)
+    dm = DownloadManager(dest_path, msg_out)
     if not dm.download_model(model):
-      raise Exception("Cannot download model")
+      raise Exception(f"Cannot download model: {model_id}")
 
     match model.type:
       case ModelType.SD15:

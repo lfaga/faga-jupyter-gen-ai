@@ -167,8 +167,12 @@ class FileManager:
       return emb.clone()
     return None
 
-  def get_presets(self, model_id: str | None = None) -> dict[str, ModelParams]:
-    return {n: p for n, p in self._presets.items() if not model_id or p.model == model_id}
+  def get_presets(self, model_id: str | None = None, model_type: ModelType | None = None) -> dict[str, ModelParams]:
+    return {
+      n: p
+      for n, p in self._presets.items()
+      if (not model_id or p.model == model_id) and (not model_type or p.model_type == model_type)
+    }
 
   def get_preset(self, name: str) -> ModelParams | None:
     return self._presets.get(name)
@@ -176,8 +180,11 @@ class FileManager:
   def is_valid_preset_name(self, name: str) -> bool:
     return name in self._presets
 
+  def is_valid_preset_for_type(self, model_type: ModelType, name: str) -> bool:
+    return name in self.get_presets(model_type=model_type)
+
   def is_valid_preset_for_model(self, model_id: str, name: str) -> bool:
-    return name in self.get_presets(model_id)
+    return name in self.get_presets(model_id=model_id)
 
   def save_preset(self, name: str, preset: ModelParams) -> bool:
 

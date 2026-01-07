@@ -46,7 +46,8 @@ class ModelParams:
   hires_fix: bool
   upscale_model: str
 
-  def get_type(self) -> ModelType:
+  @property
+  def model_type(self) -> ModelType:
     raise NotImplementedError()
 
   @classmethod
